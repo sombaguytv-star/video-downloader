@@ -1,0 +1,928 @@
+ // config/site.ts
+  export const siteConfig = {
+    name: "Téléchargez Vos Vidéos Préférées Gratuitement",
+    description: "Compatible avec YouTube, TikTok, Facebook, Shorts, Reels et plus encore. Rapide, gratuit et sans
+  inscription.",
+    url: "https://votre-domaine.com",
+    email: "contact@votre-domaine.com",
+    socials: {
+      twitter: "https://twitter.com/votre-compte",
+      facebook: "https://facebook.com/votre-page",
+      instagram: "https://instagram.com/votre-compte",
+    },
+    platforms: [
+      { name: "YouTube", slug: "youtube", icon: "📺" },
+      { name: "YouTube Shorts", slug: "youtube-shorts", icon: "📱" },
+      { name: "TikTok", slug: "tiktok", icon: "🎵" },
+      { name: "Facebook", slug: "facebook", icon: "👥" },
+      { name: "Facebook Reels", slug: "facebook-reels", icon: "🎬" },
+      { name: "Instagram Reels", slug: "instagram-reels", icon: "📸" },
+    ],
+    adsense: {
+      clientId: "ca-pub-XXXXXXXXXXXXXXXX", // Remplacez par votre ID AdSense
+      slots: {
+        topBanner: "slot-1",
+        betweenSections: "slot-2",
+        rectangle: "slot-3",
+        sidebar: "slot-4",
+        blogContent: "slot-5",
+        footerBanner: "slot-6",
+      }
+    },
+    pricing: {
+      free: {
+        name: "Gratuit",
+        price: "0€",
+        features: ["Fonctionnalités de base", "Sans inscription", "Utilisation standard"],
+        buttonText: "Utiliser gratuitement",
+      },
+      premium: {
+        name: "Premium",
+        price: "9.99€/mois",
+        features: ["Fonctionnalités avancées", "Traitement prioritaire", "Options supplémentaires"],
+        buttonText: "Découvrir l'offre",
+      },
+      business: {
+        name: "Business",
+        price: "29.99€/mois",
+        features: ["Fonctionnalités professionnelles", "Utilisation avancée", "Support prioritaire"],
+        buttonText: "En savoir plus",
+      },
+    }
+  };
+
+  export type SiteConfig = typeof siteConfig;
+
+  2. tailwind.config.ts
+
+  Voici la configuration pour obtenir le look "SaaS Moderne". J'ai ajouté une palette de couleurs spécifique pour le
+  rouge d'action.
+
+  // tailwind.config.ts
+  import type { Config } from 'tailwindcss'
+
+  const config: Config = {
+    content: [
+      './pages/**/*.{js,ts,jsx,tsx,mdx}',
+      './components/**/*.{js,ts,jsx,tsx,mdx}',
+      './app/**/*.{js,ts,jsx,tsx,mdx}',
+    ],
+    theme: {
+      extend: {
+        colors: {
+          // Palette Premium
+          primary: {
+            DEFAULT: '#E11D48', // Rouge vif professionnel
+            hover: '#BE123C',
+            dark: '#9F1239',
+          },
+          secondary: {
+            DEFAULT: '#F8FAFC', // Gris très clair pour fond
+            dark: '#E2E8F0',
+          },
+          accent: {
+            dark: '#0F172A', // Noir/Bleu nuit pour les titres
+            medium: '#475569', // Gris pour le texte secondaire
+          },
+        },
+        borderRadius: {
+          'premium': '12px',
+        },
+        boxShadow: {
+          'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+          'premium': '0 10px 30px -10px rgba(0, 0, 0, 0.1)',
+        },
+      },
+    },
+    plugins: [],
+  }
+  export default config
+
+  3. styles/globals.css
+
+  Le CSS global pour assurer la fluidité et la typographie moderne.
+
+  /* styles/globals.css */
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
+
+  :root {
+    --foreground-rgb: 15, 23, 42;
+    --background-rgb: 248, 250, 252;
+  }
+
+  body {
+    color: rgb(var(--foreground-rgb));
+    background: rgb(var(--background-rgb));
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-white font-semibold py-3 px-6 rounded-premium
+           transition-all duration-200 hover:bg-primary-hover
+           active:scale-95 shadow-soft hover:shadow-premium;
+  }
+
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24;
+  }
+
+  .ad-container {
+    @apply bg-gray-100 border border-gray-200 rounded-lg flex items-center justify-center
+           text-gray-400 text-xs uppercase tracking-widest my-8 overflow-hidden;
+    min-height: 90px;
+  }
+
+1. components/layout/Header.tsx
+
+  Le menu de navigation avec un design épuré et un menu responsive (hamburger) pour mobile.
+
+  // components/layout/Header.tsx
+  "use client";
+  import React, { useState } from 'react';
+  import Link from 'next/link';
+  import { siteConfig } from '@/config/site';
+
+  export default function Header() {
+    const [isOpen, setIsOpen] = useState(false);
+
+    return (
+      <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-2 group">
+              <div className="bg-primary text-white p-1.5 rounded-lg group-hover:rotate-12 transition-transform">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+  stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2
+  2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+              </div>
+              <span className="font-bold text-accent-dark text-lg tracking-tight">VidDownloader</span>
+            </Link>
+
+            {/* Desktop Menu */}
+            <nav className="hidden md:flex items-center gap-8">
+              <Link href="/" className="text-sm font-medium text-accent-medium hover:text-primary
+  transition-colors">Accueil</Link>
+              <Link href="/a-propos" className="text-sm font-medium text-accent-medium hover:text-primary
+  transition-colors">À-propos</Link>
+              <Link href="/blog" className="text-sm font-medium text-accent-medium hover:text-primary
+  transition-colors">Blog</Link>
+              <Link href="/contact" className="text-sm font-medium text-accent-medium hover:text-primary
+  transition-colors">Contact</Link>
+              <Link href="/" className="btn-primary !py-2 !px-4 text-sm">Commencer</Link>
+            </nav>
+
+            {/* Mobile Toggle */}
+            <button className="md:hidden p-2 text-accent-dark" onClick={() => setIsOpen(!isOpen)}>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24"
+  stroke="currentColor">
+                {isOpen ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+  : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />}
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        {isOpen && (
+          <div className="md:hidden bg-white border-b border-gray-100 px-4 py-4 flex flex-col gap-4 animate-in
+  slide-in-from-top duration-200">
+            <Link href="/" className="text-base font-medium text-accent-medium" onClick={() =>
+  setIsOpen(false)}>Accueil</Link>
+            <Link href="/a-propos" className="text-base font-medium text-accent-medium" onClick={() =>
+  setIsOpen(false)}>À-propos</Link>
+            <Link href="/blog" className="text-base font-medium text-accent-medium" onClick={() =>
+  setIsOpen(false)}>Blog</Link>
+            <Link href="/contact" className="text-base font-medium text-accent-medium" onClick={() =>
+  setIsOpen(false)}>Contact</Link>
+            <Link href="/" className="btn-primary text-center" onClick={() => setIsOpen(false)}>Commencer</Link>
+          </div>
+        )}
+      </header>
+    );
+  }
+
+  2. components/ui/DownloadForm.tsx
+
+  C'est l'élément le plus important du site. J'ai intégré les états de chargement, d'erreur et de succès pour une UX
+  fluide.
+
+  // components/ui/DownloadForm.tsx
+  "use client";
+  import React, { useState } from 'react';
+
+  type Status = 'idle' | 'loading' | 'success' | 'error';
+
+  export default function DownloadForm() {
+    const [url, setUrl] = useState('');
+    const [status, setStatus] = useState<Status>('idle');
+    const [result, setResult] = useState<{ title: string; quality: string; size: string } | null>(null);
+
+    const handleDownload = async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!url) return;
+
+      setStatus('loading');
+
+      try {
+        // Simulation d'appel API
+        const response = await fetch('/api/download', {
+          method: 'POST',
+          body: JSON.stringify({ url }),
+          headers: { 'Content-Type': 'application/json' },
+        });
+
+        if (!response.ok) throw new Error('Lien invalide');
+
+        const data = await response.json();
+        setResult(data);
+        setStatus('success');
+      } catch (err) {
+        setStatus('error');
+      }
+    };
+
+    return (
+      <div className="w-full max-w-3xl mx-auto">
+        <form onSubmit={handleDownload} className="relative flex flex-col sm:flex-row gap-3 p-2 bg-white rounded-2xl
+  shadow-premium border border-gray-100">
+          <div className="relative flex-1">
+            <input
+              type="url"
+              placeholder="Collez le lien de votre vidéo ici..."
+              className="w-full px-4 py-4 rounded-xl bg-transparent outline-none text-accent-dark
+  placeholder:text-gray-400"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={status === 'loading'}
+            className="btn-primary whitespace-nowrap flex items-center justify-center gap-2"
+          >
+            {status === 'loading' ? (
+              <>
+                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+  viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+  strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0
+  12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.918l3-2.627z"></path></svg>
+                Analyse...
+              </>
+            ) : 'Télécharger'}
+          </button>
+        </form>
+
+        {/* Feedback Area */}
+        <div className="mt-6 transition-all duration-300">
+          {status === 'error' && (
+            <div className="p-4 bg-red-50 border border-red-100 text-red-600 rounded-xl text-center text-sm animate-in
+  fade-in slide-in-from-top-2">
+              Ce lien ne peut pas être traité. Vérifiez l'URL et assurez-vous que vous disposez des droits nécessaires
+  pour télécharger ce contenu.
+            </div>
+          )}
+
+          {status === 'success' && result && (
+            <div className="p-6 bg-white border border-green-100 rounded-2xl shadow-soft animate-in zoom-in-95
+  duration-300">
+              <div className="flex items-center gap-4">
+                <div className="bg-green-100 p-3 rounded-full text-green-600">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+  stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4
+  12"/></svg>
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-bold text-accent-dark">{result.title}</h3>
+                  <p className="text-sm text-accent-medium">{result.quality} • {result.size}</p>
+                </div>
+                <a href="#" className="btn-primary !py-2 !px-4 text-sm">Lancer le téléchargement</a>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  3. components/ui/AdContainer.tsx
+
+  Un composant simple et réutilisable pour vos publicités Google AdSense, sans bloquer le rendu du contenu.
+
+  // components/ui/AdContainer.tsx
+  import { siteConfig } from '@/config/site';
+
+  interface AdContainerProps {
+    slot: keyof typeof siteConfig.adsense.slots;
+    className?: string;
+  }
+
+  export default function AdContainer({ slot, className }: AdContainerProps) {
+    return (
+      <div className={`ad-container ${className}`}>
+        {/* Ici viendra le code Google AdSense */}
+        <div className="text-center">
+          <p className="font-semibold">Publicité</p>
+          <p className="text-[10px] opacity-50">ID Slot: {siteConfig.adsense.slots[slot]}</p>
+        </div>
+      </div>
+    );
+  }
+
+  4. components/layout/Footer.tsx
+
+  Footer professionnel avec navigation, mentions légales et copyright.
+
+  // components/layout/Footer.tsx
+  import Link from 'next/link';
+  import { siteConfig } from '@/config/site';
+
+  export default function Footer() {
+    return (
+      <footer className="bg-white border-t border-gray-100 pt-16 pb-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+            <div className="col-span-1 md:col-span-1">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="bg-primary text-white p-1 rounded-md">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+  stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2
+  2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                </div>
+                <span className="font-bold text-accent-dark">VidDownloader</span>
+              </div>
+              <p className="text-sm text-accent-medium leading-relaxed">
+                L'outil le plus rapide et gratuit pour télécharger vos vidéos préférées en toute simplicité.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="font-bold text-accent-dark mb-4">Navigation</h4>
+              <ul className="space-y-2 text-sm text-accent-medium">
+                <li><Link href="/" className="hover:text-primary transition-colors">Accueil</Link></li>
+                <li><Link href="/a-propos" className="hover:text-primary transition-colors">À-propos</Link></li>
+                <li><Link href="/blog" className="hover:text-primary transition-colors">Blog</Link></li>
+                <li><Link href="/contact" className="hover:text-primary transition-colors">Contact</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-bold text-accent-dark mb-4">Légal</h4>
+              <ul className="space-y-2 text-sm text-accent-medium">
+                <li><Link href="/privacy" className="hover:text-primary transition-colors">Confidentialité</Link></li>
+                <li><Link href="/terms" className="hover:text-primary transition-colors">Conditions</Link></li>
+                <li><Link href="/cookies" className="hover:text-primary transition-colors">Cookies</Link></li>
+                <li><Link href="/mentions" className="hover:text-primary transition-colors">Mentions Légales</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-bold text-accent-dark mb-4">Suivez-nous</h4>
+              <div className="flex gap-4">
+                {Object.entries(siteConfig.socials).map(([platform, url]) => (
+                  <a key={platform} href={url} className="p-2 bg-secondary rounded-full text-accent-medium
+  hover:text-primary hover:bg-secondary-dark transition-all">
+                    <span className="sr-only">{platform}</span>
+                    <div className="w-5 h-5 bg-current opacity-20 rounded-sm" /> {/* Remplacer par icônes SVG */}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-xs text-accent-medium">
+              © {new Date().getFullYear()} — Tous droits réservés.
+            </p>
+            <p className="text-xs text-accent-medium italic">
+              Respectez les droits d'auteur et les conditions d'utilisation des plateformes.
+            </p>
+          </div>
+        </div>
+      </footer>
+    );
+  }
+
+1. app/page.tsx
+
+  // app/page.tsx
+  import React from 'react';
+  import { siteConfig } from '@/config/site';
+  import Header from '@/components/layout/Header';
+  import Footer from '@/components/layout/Footer';
+  import DownloadForm from '@/components/ui/DownloadForm';
+  import AdContainer from '@/components/ui/AdContainer';
+
+  export const metadata = {
+    title: siteConfig.name,
+    description: siteConfig.description,
+    openGraph: {
+      title: siteConfig.name,
+      description: siteConfig.description,
+      type: 'website',
+    },
+  };
+
+  export default function Home() {
+    return (
+      <div className="flex flex-col min-h-screen">
+        <Header />
+
+        <main className="flex-grow">
+          {/* Ad Emplacement 1: Sous le Header */}
+          <div className="max-w-7xl mx-auto px-4 pt-4">
+            <AdContainer slot="topBanner" />
+          </div>
+
+          {/* HERO SECTION */}
+          <section className="relative overflow-hidden bg-white pt-16 pb-24 sm:pt-24 sm:pb-32">
+            <div className="section-container text-center relative z-10">
+              <h1 className="text-4xl sm:text-6xl font-extrabold text-accent-dark tracking-tight mb-6 animate-in fade-in
+  slide-in-from-bottom-4 duration-700">
+                {siteConfig.name}
+              </h1>
+              <p className="text-lg sm:text-xl text-accent-medium max-w-2xl mx-auto mb-10 animate-in fade-in
+  slide-in-from-bottom-6 duration-700 delay-100">
+                {siteConfig.description}
+              </p>
+
+              <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
+                <DownloadForm />
+                <div className="mt-6 flex flex-wrap justify-center gap-4 text-xs font-medium text-gray-400 uppercase
+  tracking-widest">
+                  <span>Aucune inscription</span>
+                  <span className="hidden sm:inline">•</span>
+                  <span>Rapide</span>
+                  <span className="hidden sm:inline">•</span>
+                  <span>Simple</span>
+                  <span className="hidden sm:inline">•</span>
+                  <span>Gratuit</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Décoration d'arrière-plan */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10 pointer-events-none">
+              <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/5 blur-[120px]" />
+              <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-primary/5
+  blur-[120px]" />
+            </div>
+          </section>
+
+          {/* Ad Emplacement 2: Après le Hero */}
+          <div className="max-w-7xl mx-auto px-4">
+            <AdContainer slot="betweenSections" />
+          </div>
+
+          {/* PLATEFORMES SUPPORTÉES */}
+          <section className="bg-secondary py-20">
+            <div className="section-container">
+              <div className="text-center mb-16">
+                <h2 className="text-3xl font-bold text-accent-dark mb-4">Compatible avec vos plateformes préférées</h2>
+                <p className="text-accent-medium">Un seul outil pour toutes vos vidéos.</p>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                {siteConfig.platforms.map((p) => (
+                  <div key={p.slug} className="bg-white p-6 rounded-premium shadow-soft border border-gray-100 flex
+  flex-col items-center text-center transition-all hover:shadow-premium hover:-translate-y-1 group cursor-default">
+                    <div className="text-4xl mb-4 group-hover:scale-110 transition-transform">{p.icon}</div>
+                    <span className="font-semibold text-accent-dark text-sm">{p.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* COMMENT ÇA MARCHE */}
+          <section className="bg-white py-20">
+            <div className="section-container">
+              <div className="text-center mb-16">
+                <h2 className="text-3xl font-bold text-accent-dark">Comment ça marche ?</h2>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+                {[
+                  { step: "01", title: "Copiez le lien", desc: "Copiez l'URL de la vidéo que vous souhaitez télécharger
+  depuis votre plateforme préférée." },
+                  { step: "02", title: "Collez le lien", desc: "Collez le lien dans notre outil d'analyse rapide en haut
+  de la page." },
+                  { step: "03", title: "Téléchargez", desc: "Sélectionnez la qualité souhaitée et enregistrez votre
+  fichier instantanément." },
+                ].map((item, i) => (
+                  <div key={i} className="relative p-8 rounded-2xl border border-gray-50 bg-secondary/50 transition-all
+  hover:bg-white hover:shadow-soft group">
+                    <span className="absolute -top-4 left-8 text-5xl font-black text-primary/10
+  group-hover:text-primary/20 transition-colors">
+                      {item.step}
+                    </span>
+                    <h3 className="text-xl font-bold text-accent-dark mb-3 relative z-10">{item.title}</h3>
+                    <p className="text-accent-medium leading-relaxed relative z-10">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* AVANTAGES */}
+          <section className="bg-secondary py-20">
+            <div className="section-container">
+              <div className="text-center mb-16">
+                <h2 className="text-3xl font-bold text-accent-dark">Pourquoi utiliser notre outil ?</h2>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {[
+                  { title: "Gratuit", desc: "Utilisez l'outil sans abonnement obligatoire.", icon: "💰" },
+                  { title: "Sans inscription", desc: "Aucun compte n'est nécessaire pour utiliser la fonctionnalité
+  principale.", icon: "🔑" },
+                  { title: "Rapide", desc: "Interface optimisée pour fournir une expérience ultra-rapide.", icon: "⚡"
+  },
+                  { title: "Simple", desc: "Une interface claire et intuitive accessible même aux débutants.", icon:
+  "✨" },
+                  { title: "Compatible mobile", desc: "Fonctionne parfaitement sur smartphone, tablette et ordinateur.",
+  icon: "📱" },
+                  { title: "Sécurisé", desc: "Nous ne demandons aucune information personnelle inutile.", icon: "🛡️" },
+                ].map((feature, i) => (
+                  <div key={i} className="bg-white p-8 rounded-premium shadow-soft flex gap-5 transition-all
+  hover:shadow-premium">
+                    <div className="text-3xl">{feature.icon}</div>
+                    <div>
+                      <h3 className="font-bold text-accent-dark mb-2">{feature.title}</h3>
+                      <p className="text-sm text-accent-medium leading-relaxed">{feature.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* FAQ */}
+          <section className="bg-white py-20">
+            <div className="section-container max-w-3xl">
+              <div className="text-center mb-16">
+                <h2 className="text-3xl font-bold text-accent-dark">Questions Fréquentes</h2>
+              </div>
+
+              <div className="space-y-4">
+                {[
+                  { q: "Comment télécharger une vidéo ?", a: "Il vous suffit de copier l'URL de la vidéo, de la coller
+  dans notre champ de saisie et de cliquer sur le bouton 'Télécharger'." },
+                  { q: "Le service est-il gratuit ?", a: "Oui, notre service de base est entièrement gratuit et
+  accessible à tous sans frais cachés." },
+                  { q: "Dois-je créer un compte ?", a: "Non, aucune inscription n'est requise pour télécharger vos
+  vidéos. Nous privilégions votre anonymat." },
+                  { q: "Est-il légal de télécharger une vidéo ?", a: "Le téléchargement doit être effectué dans le
+  respect des conditions d'utilisation de la plateforme et des lois sur le droit d'auteur de votre pays. Assurez-vous
+  d'avoir les droits nécessaires." },
+                  { q: "Pourquoi certains liens ne fonctionnent-ils pas ?", a: "Certaines vidéos sont privées, protégées
+  par DRM ou restreintes géographiquement, ce qui rend leur téléchargement impossible." },
+                ].map((item, i) => (
+                  <details key={i} className="group bg-secondary rounded-xl border border-gray-100 overflow-hidden
+  transition-all">
+                    <summary className="flex justify-between items-center p-5 font-semibold text-accent-dark
+  cursor-pointer hover:bg-gray-100 transition-colors list-none">
+                      {item.q}
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform
+  group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </summary>
+                    <div className="p-5 text-accent-medium text-sm leading-relaxed bg-white border-t border-gray-100">
+                      {item.a}
+                    </div>
+                  </details>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Ad Emplacement 6: Avant le footer */}
+          <div className="max-w-7xl mx-auto px-4 pb-12">
+            <AdContainer slot="footerBanner" />
+          </div>
+        </main>
+
+        <Footer />
+      </div>
+    );
+  }
+
+1. app/blog/page.tsx
+
+  La page liste tous vos articles. Elle inclut une sidebar pour vos publicités et vos offres payantes.
+
+  // app/blog/page.tsx
+  import React from 'react';
+  import Link from 'next/link';
+  import Header from '@/components/layout/Header';
+  import Footer from '@/components/layout/Footer';
+  import AdContainer from '@/components/ui/AdContainer';
+  import { siteConfig } from '@/config/site';
+
+  // Simulation de données d'articles (à remplacer par un CMS ou Markdown plus tard)
+  const POSTS = [
+    {
+      slug: 'comment-telecharger-tiktok',
+      title: 'Comment télécharger des vidéos TikTok sans filigrane ?',
+      excerpt: 'Découvrez la méthode la plus simple et rapide pour sauvegarder vos TikToks préférés en haute
+  qualité...',
+      date: '24 Oct 2026',
+      category: 'Guide',
+      image: 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&q=80',
+    },
+    {
+      slug: 'meilleurs-outils-downloader-2026',
+      title: 'Top 5 des meilleurs outils de téléchargement vidéo en 2026',
+      excerpt: 'Nous avons testé les outils les plus populaires pour vous aider à choisir le meilleur service...',
+      date: '20 Oct 2026',
+      category: 'Comparatif',
+      image: 'https://images.unsplash.com/photo-1460925895917-afbe65ae8364?w=800&q=80',
+    },
+    {
+      slug: 'securite-telechargement-video',
+      title: 'Est-il sécurisé de télécharger des vidéos en ligne ?',
+      excerpt: 'Tout ce que vous devez savoir sur la sécurité, la confidentialité et les droits d''auteur...',
+      date: '15 Oct 2026',
+      category: 'Sécurité',
+      image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&q=80',
+    },
+  ];
+
+  export default function BlogPage() {
+    return (
+      <div className="flex flex-col min-h-screen">
+        <Header />
+        <main className="flex-grow bg-secondary">
+          <div className="section-container">
+            <div className="flex flex-col lg:flex-row gap-12">
+
+              {/* Main Content */}
+              <div className="lg:w-2/3">
+                <div className="mb-12 text-center lg:text-left">
+                  <h1 className="text-4xl font-extrabold text-accent-dark mb-4">{siteConfig.name} - Blog</h1>
+                  <p className="text-accent-medium">Astuces, guides et actualités sur le téléchargement de contenus
+  web.</p>
+                </div>
+
+                <div className="grid grid-cols-1 gap-8">
+                  {POSTS.map((post) => (
+                    <article key={post.slug} className="bg-white rounded-premium shadow-soft overflow-hidden flex
+  flex-col sm:flex-row border border-gray-100 transition-all hover:shadow-premium">
+                      <div className="sm:w-1/3 h-48 sm:h-auto relative overflow-hidden">
+                        <img src={post.image} alt={post.title} className="w-full h-full object-cover hover:scale-105
+  transition-transform duration-500" />
+                      </div>
+                      <div className="p-6 flex-1">
+                        <div className="flex items-center gap-2 mb-3">
+                          <span className="text-[10px] font-bold uppercase tracking-wider bg-primary/10 text-primary
+  px-2 py-1 rounded">{post.category}</span>
+                          <span className="text-xs text-gray-400">{post.date}</span>
+                        </div>
+                        <h2 className="text-xl font-bold text-accent-dark mb-3 hover:text-primary transition-colors">
+                          <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+                        </h2>
+                        <p className="text-sm text-accent-medium mb-6 line-clamp-2 leading-relaxed">{post.excerpt}</p>
+                        <Link href={`/blog/${post.slug}`} className="text-primary font-semibold text-sm flex
+  items-center gap-1 hover:underline">
+                          Lire l'article →
+                        </Link>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
+
+              {/* Sidebar */}
+              <aside className="lg:w-1/3 space-y-8">
+                {/* Ad Sidebar */}
+                <AdContainer slot="sidebar" className="h-[250px]" />
+
+                {/* Offres Payantes Card */}
+                <div className="bg-accent-dark text-white p-6 rounded-premium shadow-premium relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-primary/20 blur-3xl rounded-full" />
+                  <h3 className="text-xl font-bold mb-4 relative z-10">Besoin de plus ?</h3>
+                  <p className="text-sm text-gray-300 mb-6 relative z-10 leading-relaxed">
+                    Passez au Premium pour bénéficier d'un traitement prioritaire et de fonctionnalités avancées.
+                  </p>
+                  <Link href="/blog/offres" className="btn-primary block text-center w-full relative z-10">
+                    Voir nos offres
+                  </Link>
+                </div>
+
+                {/* Catégories */}
+                <div className="bg-white p-6 rounded-premium shadow-soft border border-gray-100">
+                  <h3 className="font-bold text-accent-dark mb-4">Catégories</h3>
+                  <ul className="space-y-2">
+                    {['Guides', 'Actualités', 'Comparatifs', 'Sécurité'].map(cat => (
+                      <li key={cat}>
+                        <Link href="#" className="text-sm text-accent-medium hover:text-primary
+  transition-colors">{cat}</Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </aside>
+
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  2. app/a-propos/page.tsx
+
+  Une page qui humanise le service et renforce la confiance.
+
+  // app/a-propos/page.tsx
+  import Header from '@/components/layout/Header';
+  import Footer from '@/components/layout/Footer';
+
+  export default function AboutPage() {
+    return (
+      <div className="flex flex-col min-h-screen">
+        <Header />
+        <main className="flex-grow bg-white">
+          <div className="section-container max-w-3xl">
+            <h1 className="text-4xl font-extrabold text-accent-dark text-center mb-8">À propos de notre service</h1>
+
+            <div className="prose prose-slate max-w-none text-accent-medium leading-relaxed space-y-6">
+              <p className="text-lg">
+                Notre mission est simple : offrir un accès gratuit, rapide et sécurisé au téléchargement de contenus
+  vidéo,
+                en respectant scrupuleusement les droits des créateurs et les conditions des plateformes.
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-12">
+                <div className="p-6 bg-secondary rounded-premium border border-gray-100">
+                  <h3 className="font-bold text-accent-dark mb-2">🚀 Simplicité</h3>
+                  <p className="text-sm">Pas de compte, pas d'installation. Juste un lien et un clic.</p>
+                </div>
+                <div className="p-6 bg-secondary rounded-premium border border-gray-100">
+                  <h3 className="font-bold text-accent-dark mb-2">🛡️ Confidentialité</h3>
+                  <p className="text-sm">Nous ne collectons aucune donnée personnelle lors de vos téléchargements.</p>
+                </div>
+              </div>
+
+              <h2 className="text-2xl font-bold text-accent-dark mt-12 mb-4">Notre objectif</h2>
+              <p>
+                Créer une expérience utilisateur fluide et accessible depuis n'importe quel appareil.
+                Nous croyons que la technologie doit être accessible à tous, sans barrières techniques.
+              </p>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  3. app/contact/page.tsx
+
+  Un formulaire de contact propre avec validation visuelle.
+
+  // app/contact/page.tsx
+  "use client";
+  import React, { useState } from 'react';
+  import Header from '@/components/layout/Header';
+  import Footer from '@/components/layout/Footer';
+
+  export default function ContactPage() {
+    const [sent, setSent] = useState(false);
+
+    const handleSubmit = (e: React.FormEvent) => {
+      e.preventDefault();
+      setSent(true);
+    };
+
+    return (
+      <div className="flex flex-col min-h-screen">
+        <Header />
+        <main className="flex-grow bg-secondary">
+          <div className="section-container max-w-2xl">
+            <div className="text-center mb-12">
+              <h1 className="text-4xl font-extrabold text-accent-dark mb-4">Contactez-nous</h1>
+              <p className="text-accent-medium">Une question ? Un problème ? Nous sommes là pour vous aider.</p>
+            </div>
+
+            <div className="bg-white p-8 rounded-premium shadow-premium border border-gray-100">
+              {sent ? (
+                <div className="text-center py-12 animate-in zoom-in-95">
+                  <div className="bg-green-100 text-green-600 w-16 h-16 rounded-full flex items-center justify-center
+  mx-auto mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+  stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4
+  12"/></svg>
+                  </div>
+                  <h2 className="text-2xl font-bold text-accent-dark mb-2">Message envoyé !</h2>
+                  <p className="text-accent-medium">Nous vous répondrons dans les plus brefs délais.</p>
+                  <button onClick={() => setSent(false)} className="mt-6 text-primary font-semibold
+  hover:underline">Envoyer un autre message</button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-sm font-semibold text-accent-dark">Nom</label>
+                      <input type="text" required className="w-full p-3 rounded-xl border border-gray-200 outline-none
+  focus:border-primary transition-colors" placeholder="Jean Dupont" />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-semibold text-accent-dark">Email</label>
+                      <input type="email" required className="w-full p-3 rounded-xl border border-gray-200 outline-none
+  focus:border-primary transition-colors" placeholder="jean@email.com" />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold text-accent-dark">Sujet</label>
+                    <input type="text" required className="w-full p-3 rounded-xl border border-gray-200 outline-none
+  focus:border-primary transition-colors" placeholder="Sujet de votre message" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold text-accent-dark">Message</label>
+                    <textarea required rows={5} className="w-full p-3 rounded-xl border border-gray-200 outline-none
+  focus:border-primary transition-colors" placeholder="Comment pouvons-nous vous aider ?"></textarea>
+                  </div>
+                  <button type="submit" className="btn-primary w-full py-4">Envoyer le message</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+// app/api/download/route.ts
+  import { NextResponse } from 'next/server';
+
+  // Liste des domaines autorisés pour éviter les attaques SSRF (Server-Side Request Forgery)
+  const ALLOWED_DOMAINS = [
+    'youtube.com', 'youtu.be', 'tiktok.com', 'facebook.com', 'instagram.com', 'fb.watch'
+  ];
+
+  export async function POST(request: Request) {
+    try {
+      const body = await request.json();
+      const { url } = body;
+
+      // 1. Validation de l'URL
+      if (!url || !url.startsWith('http')) {
+        return NextResponse.json({ error: 'URL invalide' }, { status: 400 });
+      }
+
+      try {
+        const parsedUrl = new URL(url);
+        const domain = parsedUrl.hostname.replace('www.', '');
+
+        // 2. Vérification du domaine
+        const isAllowed = ALLOWED_DOMAINS.some(d => domain.endsWith(d));
+        if (!isAllowed) {
+          return NextResponse.json({
+            error: 'Cette plateforme n\'est pas encore supportée ou le lien est invalide.'
+          }, { status: 400 });
+        }
+
+        // 3. Simulation du traitement (C'est ici que vous connecterez yt-dlp ou une API tierce)
+        // console.log(`Traitement de la vidéo : ${url}`);
+
+        // Simulation d'un délai de réseau
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
+        // 4. Retour des informations de la vidéo
+        // Dans un cas réel, ces données proviendraient de l'analyse du lien
+        return NextResponse.json({
+          title: "Vidéo téléchargée avec succès",
+          quality: "1080p (HD)",
+          size: "12.4 MB",
+          downloadUrl: "#", // URL générée par votre service de téléchargement
+        });
+
+      } catch (e) {
+        return NextResponse.json({ error: 'Format d\'URL incorrect' }, { status: 400 });
+      }
+
+    } catch (error) {
+      return NextResponse.json({ error: 'Erreur interne du serveur' }, { status: 500 });
+    }
+  }
+
+  2. lib/utils.ts
+
+  Quelques fonctions utilitaires pour le nettoyage des données.
+
+  // lib/utils.ts
+  export function cn(...inputs: any[]) {
+    return inputs.filter(Boolean).join(' ');
+  }
+
+  export function sanitizeUrl(url: string) {
+    return url.trim().toLowerCase();
+  }
+
